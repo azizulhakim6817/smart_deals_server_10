@@ -25,7 +25,7 @@ admin.initializeApp({
 //! middleware-------------------------------
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://smart-deals-client-10.vercel.app"],
     credentials: true,
   })
 );
@@ -221,7 +221,7 @@ async function run() {
 
     //! get product -----------------------
     app.get("/all-products", async (req, res) => {
-      //console.log(req.query); //https://smart-deals-server-navy.vercel.app/all-products?email=seller15@gmail.com
+      //console.log(req.query); //https://smart-deals-server-10.vercel.app/all-products?email=seller15@gmail.com
       const email = req.query.email;
       const query = {};
       if (email) {
