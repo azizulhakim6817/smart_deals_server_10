@@ -25,7 +25,7 @@ admin.initializeApp({
 //! middleware-------------------------------
 app.use(
   cors({
-    origin: ["https://smart-deals-client-10.vercel.app"],
+    origin: ["https://bright-froyo-249094.netlify.app/"],
     credentials: true,
   })
 );

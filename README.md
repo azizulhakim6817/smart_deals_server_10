@@ -1,7 +1,21 @@
-## client side vercel 
+## client side vercel
+
 --- https://smart-deals-client-10.vercel.app/
-## server side vercel 
+
+## server side vercel
+
 --- https://smart-deals-server-10.vercel.app/latest-products
+
+## cors -------------------------------
+
+````js
+app.use(
+  cors({
+    origin: ["https://smart-deals-client-10.vercel.app"],
+    credentials: true,
+  })
+);
+```
 
 # Server Deployment steps
 
@@ -11,7 +25,7 @@ comment await commands outside api methods for solving gateway timeout error
 ```js
 client.close();
 await client.db("admin").command({ ping: 1 });
-```
+````
 
 # create vercel.json file for configuring server
 
@@ -35,6 +49,7 @@ await client.db("admin").command({ ping: 1 });
 ```
 
 # Whitelisting the ip address or allow from anywhere ( Security > Database & Network Access > IP Access List > Add IP Address
+
 For Firebase Token Verification
 4-a . If you are using Firebase jwt token verification on the server, convert the service key from utf8 to base64 string:
 
@@ -45,11 +60,13 @@ const key = fs.readFileSync("./firebase-admin-key.json", "utf8");
 const base64 = Buffer.from(key).toString("base64");
 console.log(base64);
 ```
+
 Run this file by using: node encode.js your file name
 
 4-b. Now get the key from base64 to utf8
 
 # // index.js
+
 const decoded = Buffer.from(process.env.FB_SERVICE_KEY, "base64").toString("utf8");
 const serviceAccount = JSON.parse(decoded);
 Deploy to Vercel
