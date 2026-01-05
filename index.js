@@ -23,12 +23,7 @@ admin.initializeApp({
 });
 
 //! middleware-------------------------------
-app.use(
-  cors({
-    origin: ["https://bright-froyo-249094.netlify.app/"],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(express.json());
 
 /* const loggerInfo = (req, res, next) => {
