@@ -23,7 +23,17 @@ admin.initializeApp({
 });
 
 //! middleware-------------------------------
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://smart-deals-client.vercel.app" // future frontend
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 
 /* const loggerInfo = (req, res, next) => {
@@ -216,7 +226,7 @@ async function run() {
 
     //! get product -----------------------
     app.get("/all-products", async (req, res) => {
-      //console.log(req.query); //https://smart-deals-server-10.vercel.app/all-products?email=seller15@gmail.com
+      //console.log(req.query); //https://smart-deals-server-navy.vercel.app/all-products?email=seller15@gmail.com
       const email = req.query.email;
       const query = {};
       if (email) {
