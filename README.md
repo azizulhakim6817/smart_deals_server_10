@@ -1,3 +1,8 @@
+## client side vercel 
+--- https://smart-deals-client-10.vercel.app/
+## server side vercel 
+--- https://smart-deals-server-10.vercel.app/latest-products
+
 # Server Deployment steps
 
 comment await commands outside api methods for solving gateway timeout error
