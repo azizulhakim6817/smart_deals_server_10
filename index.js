@@ -180,13 +180,17 @@ async function run() {
     });
 
     //! product Id by bids matching -----------
-    app.get("/product-by-id/:productId", verifyJWTToken, async (req, res) => {
-      const productId = req.params.productId;
-      const query = { product: productId };
-      const cursor = bidsCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+    app.get(
+      "/product-by-id/:productId",
+      verifyFireBaseToken,
+      async (req, res) => {
+        const productId = req.params.productId;
+        const query = { product: productId };
+        const cursor = bidsCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      }
+    );
 
     //! update bids ------------------
     app.patch("/update-bids/:id", async (req, res) => {
