@@ -78,13 +78,13 @@ async function run() {
     const downloadCollection = db.collection("downloads");
 
     //! jwt create/generate get-Token by api -post---
-    app.post("/getToken", (req, res) => {
+    /* app.post("/getToken", (req, res) => {
       const loggeUserEmail = req.body;
       const token = jwt.sign(loggeUserEmail, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
       res.send({ token: token });
-    });
+    }); */
 
     //! jwt-- VerifyToken --------------------
     const verifyJWTToken = (req, res, next) => {
