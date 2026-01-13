@@ -352,7 +352,7 @@ async function run() {
     app.post("/products", verifyFireBaseToken, async (req, res) => {
       const newProduct = {
         ...req.body,
-        created_at: new Date(), // ✅ auto timestamp
+        created_at: new Date(), 
       };
       const result = await productCollection.insertOne(newProduct);
       res.send(result);
