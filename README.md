@@ -1,10 +1,10 @@
-## client side vercel
+## client side vercel deploy-----------------------------
 
 --- https://smart-deals-client-10.vercel.app/
 
-## server side vercel
+## 1. server side vercel deploy ----------------------------------
 
---- https://smart-deals-server-10.vercel.app//latest-products
+--- https://smart-deals-server-10.vercel.app/latest-products
 
 ## cors -------------------------------
 
