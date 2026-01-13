@@ -247,7 +247,7 @@ async function run() {
           .sort(sortOption)
           .limit(Number(limit))
           .skip(Number(skip))
-          .project({ _id: 0 })
+          /* .project({ _id: 0 }) */
           .toArray();
 
         /* total products---------- */
