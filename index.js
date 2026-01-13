@@ -210,7 +210,7 @@ async function run() {
 
     //! get all latest-products ------------
     app.get("/latest-products", async (req, res) => {
-      /* http://localhost:5000/latest-products?limit=15&skip=2&sort=price_min&price=asc&search=ws */
+      /* https://smart-deals-server-10.vercel.app/latest-products?limit=15&skip=2&sort=price_min&price=asc&search=ws */
       try {
         const {
           limit = 0,
@@ -257,7 +257,7 @@ async function run() {
 
     //! get product -----------------------
     app.get("/all-products", async (req, res) => {
-      //console.log(req.query); //https://smart-deals-server-10.vercel.app/all-products?email=seller15@gmail.com
+      //console.log(req.query); //https://smart-deals-server-10.vercel.app//all-products?email=seller15@gmail.com
       const email = req.query.email;
       const query = {};
       if (email) {

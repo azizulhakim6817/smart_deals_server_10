@@ -4,7 +4,7 @@
 
 ## server side vercel
 
---- https://smart-deals-server-10.vercel.app/latest-products
+--- https://smart-deals-server-10.vercel.app//latest-products
 
 ## cors -------------------------------
 
