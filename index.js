@@ -16,8 +16,8 @@ const decoded = Buffer.from(
   process.env.FIREBASE_SERVICE_KEY,
   "base64"
 ).toString("utf8");
-const serviceAccount = JSON.parse(decoded);
 
+const serviceAccount = JSON.parse(decoded);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -74,6 +74,7 @@ async function run() {
     const productCollection = db.collection("products");
     const bidsCollection = db.collection("bids");
     const userCollection = db.collection("users");
+    const downloadCollection = db.collection("downloads");
 
     //! jwt create/generate get-Token by api -post---
     app.post("/getToken", (req, res) => {
@@ -209,9 +210,49 @@ async function run() {
 
     //! get all latest-products ------------
     app.get("/latest-products", async (req, res) => {
-      const cursor = productCollection.find().sort({ created_at: -1 });
-      const result = await cursor.toArray();
-      res.send(result);
+      /* http://localhost:5000/latest-products?limit=15&skip=2&sort=price_min&price=asc&search=ws */
+      try {
+        const {
+          limit = 0,
+          skip = 0,
+          sort = "price_min",
+          price = "asc",
+          search = "",
+        } = req.query;
+        //console.log(limit, skip, sort, price, search);
+
+        /* sort */
+        const sortOption = {};
+        sortOption[sort || "price_min"] = price === "asc" ? 1 : -1;
+
+        /* search-1 */
+        /* const query = search
+          ? { title: { $regex: search, $options: "i" } }
+          : {}; */
+
+        /* search-2 */
+        let query = {};
+        if (search) {
+          query.title = { $regex: search, $options: "i" };
+        }
+        //console.log(query);
+
+        const result = await productCollection
+          .find(query)
+          .sort(sortOption)
+          .limit(Number(limit))
+          .skip(Number(skip))
+          .project({ _id: 0 })
+          .toArray();
+
+        /* total products---------- */
+        let count = await productCollection.countDocuments(query);
+
+        res.send({ data: result, total: count });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+      }
     });
 
     //! get product -----------------------
@@ -242,9 +283,61 @@ async function run() {
       res.send(result);
     });
 
+    //! product by email finding ----------------
+    app.get("/my-products", verifyFireBaseToken, async (req, res) => {
+      const email = req.query.email;
+      const result = await productCollection.find({ email: email }).toArray();
+      res.send(result);
+    });
+
+    //! download product by email -----------
+    app.post("/downloads", async (req, res) => {
+      const data = req.body;
+      const result = await downloadCollection.insertOne(data);
+
+      const filter = { _id: new ObjectId(data._id) };
+      const update = {
+        $inc: {
+          downloads: 1,
+        },
+      };
+      const downloadCounts = await productCollection.updateOne(filter, update);
+      res.send({ result, downloadCounts });
+    });
+
+    //! get download product by email -----------
+    app.get("/get-downloads", async (req, res) => {
+      const email = req.query.email;
+
+      const result = await downloadCollection
+        .find({
+          download_by: email,
+        })
+        .toArray();
+      res.send(result);
+    });
+
+    //! downloads details -------------------
+    app.get("/downloads-details/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await downloadCollection.findOne(query);
+      res.send(result);
+    });
+
+    //! search products -----------------
+    app.get("/search", async (req, res) => {
+      const search_text = req.query.search;
+      const result = await productCollection
+        .find({ title: { $regex: search_text, $options: "i" } })
+        .toArray();
+
+      res.send(result);
+    });
+
     //! single product --------------------
     app.get("/single-product/:id", async (req, res) => {
-      const id = req.params.id;
+      const { id } = req.params;
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.findOne(query);
       res.send(result);
@@ -294,6 +387,24 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
+//! Router Error handler..........
+// 404 Not Found
+app.use((req, res, next) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+//! Server Error handler.................
+// Global Error Handler
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running port ${port}`);
